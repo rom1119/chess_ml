@@ -19,7 +19,6 @@ from params import *
 from utils.calcDeffence import DeffenceAlgorithm
 from utils.calcAttack import AttackAlgorithm
 import random
-from bprint import *
 
 class ChessGame():
 
