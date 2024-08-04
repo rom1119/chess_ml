@@ -18,7 +18,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.optim.lr_scheduler import ExponentialLR
 from torch.optim.lr_scheduler import PolynomialLR
 
-PATH = './data/chess_model_v2'
+PATH = './models/chess_model_v2'
 LOGGER_PATH = './logs/train.log'
 
 device = (
