@@ -218,7 +218,8 @@ class NeuralNetwork():
             # scheduler.step()
 
             
-
+            loss_val = loss / (i + 1)
+            loss_val = loss_val.detach().numpy()
             if epoch % 100 == 0:
                 l_lr = 0
                 l_lr = scheduler.get_last_lr()
@@ -226,13 +227,13 @@ class NeuralNetwork():
                 log_msg = f'Epochs:{epoch + 1:5d} |  ' \
                     f'last_LR={l_lr} | ' \
                     f'Batches per epoch: {i + 1:3d} | ' \
-                    f'Loss: {loss / (i + 1):.10f}'
+                    f'Loss: {loss_val:.10f}'
                 
                 print(log_msg)
                 self.logger.log(log_msg)
 
             loss_msg = f'Loss: {loss / (i + 1):.10f}'
-            if loss < 0.00001:
+            if loss_val < 0.00001:
                 print(
                     f'LEARN ENDED  ' \
                     f'Epochs:{epoch + 1:5d} |  ' \
