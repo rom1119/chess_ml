@@ -58,7 +58,7 @@ class Net(nn.Module):
         self.layer_stack = nn.Sequential()
         self.layer_stack.append(nn.Linear(input_params, global_params))
         self.layer_stack.append(nn.Tanh())
-        for i in range(1, 30):
+        for i in range(1, 20):
             self.layer_stack.append(nn.Linear(global_params, global_params))
             self.layer_stack.append(nn.Tanh())
 
@@ -232,7 +232,7 @@ class NeuralNetwork():
                 self.logger.log(log_msg)
 
             loss_msg = f'Loss: {loss / (i + 1):.10f}'
-            if loss < 0.0001:
+            if loss < 0.00001:
                 print(
                     f'LEARN ENDED  ' \
                     f'Epochs:{epoch + 1:5d} |  ' \
