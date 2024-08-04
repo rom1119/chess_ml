@@ -17,6 +17,7 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.optim.lr_scheduler import ExponentialLR
 from torch.optim.lr_scheduler import PolynomialLR
+import time
 
 PATH = './models/chess_model_v2'
 LOGGER_PATH = './logs/train.log'
@@ -116,6 +117,7 @@ class NeuralNetwork():
         XListLen = len(X)
         XList = X
         YList = Y
+        start_time = time.time()
 
         X = X
         Y = Y
@@ -160,6 +162,8 @@ class NeuralNetwork():
         print('PARAMETERS OF MODEL', get_n_params(self.model))
         print('predictedX', predictedX.shape)
         print('predictedY', predictedY.shape)
+        # print('start_time', start_time)
+
         epochs = 5000
         # test_dataloader = DataLoader(test_data, batch_size=batch_size)
 
@@ -225,16 +229,15 @@ class NeuralNetwork():
                     f'Loss: {loss / (i + 1):.10f}'
                 
                 print(log_msg)
-                
                 self.logger.log(log_msg)
 
+            loss_msg = f'Loss: {loss / (i + 1):.10f}'
             if loss < 0.00001:
                 print(
                     f'LEARN ENDED  ' \
                     f'Epochs:{epoch + 1:5d} |  ' \
                     f'last_LR={l_lr} | ' \
-                    f'Batches per epoch: {i + 1:3d} | ' \
-                    f'Loss: {loss / (i + 1):.10f}')
+                    f'Batches per epoch: {i + 1:3d} | ' + loss_msg)
                 break
             epoch = epoch + 1
 
@@ -243,8 +246,8 @@ class NeuralNetwork():
         f'Batches per epoch: {i + 1:3d} | ' \
         f'Loss: {loss / (i + 1):.10f}')
         torch.save(self.model, PATH)
-
-        self.logger.log('||||||||||||||||||||||||||||||||| END TRAIN ||||||||||||||||||||||||||||||||| all_epochs='+str(epoch) + ' loss='+str(loss))
+        exe_time = (time.time() - start_time)
+        self.logger.log('||||||||||||||||||||||||||||||||| END TRAIN ||| all_epochs='+str(epoch) + ' loss='+loss_msg + ' exe_time=' + str(exe_time) + ' sec')
 
 
 
