@@ -403,13 +403,7 @@ with open(file_path, newline='\n') as csvfile:
 
     print(curr_game)
 
-    game = ChessGame(True)
 
-    # game.play_auto(curr_game)
-
-    nn = NeuralNetwork()
-
-    # game.play_ai(curr_game, nn)
 
     # X = np.array(game.history_boards) / 10
     # Y = np.array(game.selected_moves) / 10
@@ -418,38 +412,27 @@ with open(file_path, newline='\n') as csvfile:
 
     X = np.load('./data/X.txt.npy')
     Y = np.load('./data/Y.txt.npy')
-    X_norm = (X - np.min(X)) / (np.max(X) - np.min(X))
-    Y_norm = (Y - np.min(Y)) / (np.max(Y) - np.min(Y))
-    X = X_norm
-    Y = Y_norm
-    size_x = 10
-    size_y = 10
 
-    xx = [np.linspace(1, size_x, size_x)]
-    yy = [np.linspace(1, size_y, size_y)]
 
-    for x in X:
-        xx = np.append(xx, [x[:size_x]], axis=0)
+    # size_x = 10
+    # size_y = 10
+
+    # xx = [np.linspace(1, size_x, size_x)]
+    # yy = [np.linspace(1, size_y, size_y)]
+
+    # for x in X:
+    #     xx = np.append(xx, [x[:size_x]], axis=0)
         
-    for y in Y:
-        yy = np.append(yy, [y[:size_y]], axis=0)
-        # print('loop', x[:50])
+    # for y in Y:
+    #     yy = np.append(yy, [y[:size_y]], axis=0)
+    #     # print('loop', x[:50])
 
-    xx = np.delete(xx, 0, 0)
-    yy = np.delete(yy, 0, 0)
+    # xx = np.delete(xx, 0, 0)
+    # yy = np.delete(yy, 0, 0)
 
     # print('X', xx)
 
-    Y_index = 18
 
-
-    y_1 = Y[Y_index]
-    y_1 = np.delete(y_1, len(y_1) - 1, 0)
-    y_1 = np.delete(y_1, len(y_1) - 1, 0)
-    
-    y_1_norm = Y_norm[Y_index]
-    y_1_norm = np.delete(y_1_norm, len(y_1_norm) - 1, 0)
-    y_1_norm = np.delete(y_1_norm, len(y_1_norm) - 1, 0)
 
     # with open("./data/X.txt", "w") as txt_file:
     #     for line in X:
@@ -459,40 +442,81 @@ with open(file_path, newline='\n') as csvfile:
     #     for line in Y:
     #         txt_file.write(" ".join(line) + "\n")
     # sleep(3)
-    print('X', X[Y_index].reshape(8,8))
-    print('X_norm', X_norm[Y_index].reshape(8,8))
-    print('Y', Y[Y_index])
-    print('Y_norm', Y_norm[Y_index])
-    print('Y 1', y_1.reshape(8,8))
-    print('Y_norm 2', trunc(y_1_norm.reshape(8,8), 1))
+
     # print('Y', Y[1])
     # print('Y', Y[2])
+    with_ui = True
 
-    print('X len', len(xx), xx.shape)
+    game = ChessGame(with_ui)
+
+
+    try :
+
+        if sys.argv[2] == 'false':
+            with_ui = False
+    except:
+        pass
+
+
+    # game.play_auto(curr_game)
+
+    nn = NeuralNetwork()
+
+    if sys.argv[1] == 'play_ai':
+
+        game.play_ai(curr_game, nn)
+
+    X_norm = (X - np.min(X)) / (np.max(X) - np.min(X))
+    Y_norm = (Y - np.min(Y)) / (np.max(Y) - np.min(Y))
+
+    print('X len', len(X), X.shape)
     print('Y len', len(Y), Y.shape)
 
     print(curr_game)
     print('len', len(checkmate_games))
-    # nn.train(xx, yy)
+        # nn.train(xx, yy)
 
-# TRAIN
-    nn.train(X, Y)
+    # TRAIN
+    if sys.argv[1] == 'train':
+        X = X_norm
+        Y = Y_norm
+        nn.train(X, Y)
 
 
-# PREDS
-    # preds = np.array(nn.predict(X_norm[Y_index]))  
-    # print('preds', preds)
+    # PREDS
+    if sys.argv[1] == 'predict':
 
-    # preds = np.delete(preds, len(preds) - 1, 0)
-    # preds = np.delete(preds, len(preds) - 1, 0)
-    # q = Y[Y_index]
-    # q = np.delete(q, len(q) - 1, 0)
-    # q = np.delete(q, len(q) - 1, 0)
+        Y_index = 18
 
-    # print('X', X[Y_index].reshape(8,8))
-    # print('Y', q.reshape(8,8))
 
-    # print('preds', trunc(preds, 1).reshape(8,8))
+        y_1 = Y[Y_index]
+        y_1 = np.delete(y_1, len(y_1) - 1, 0)
+        y_1 = np.delete(y_1, len(y_1) - 1, 0)
+        
+        y_1_norm = Y_norm[Y_index]
+        y_1_norm = np.delete(y_1_norm, len(y_1_norm) - 1, 0)
+        y_1_norm = np.delete(y_1_norm, len(y_1_norm) - 1, 0)
+
+        print('X', X[Y_index].reshape(8,8))
+        print('X_norm', X_norm[Y_index].reshape(8,8))
+        print('Y', Y[Y_index])
+        print('Y_norm', Y_norm[Y_index])
+        print('Y 1', y_1.reshape(8,8))
+        print('Y_norm 2', trunc(y_1_norm.reshape(8,8), 1))
+
+        preds = np.array(nn.predict(X_norm[Y_index]))  
+        print('preds', preds)
+
+        preds = np.delete(preds, len(preds) - 1, 0)
+        preds = np.delete(preds, len(preds) - 1, 0)
+        q = Y[Y_index]
+        q = np.delete(q, len(q) - 1, 0)
+        q = np.delete(q, len(q) - 1, 0)
+
+        print('X', X[Y_index].reshape(8,8))
+        print('Y', q.reshape(8,8))
+
+        print('preds', trunc(preds, 1).reshape(8,8))
         
 
 
