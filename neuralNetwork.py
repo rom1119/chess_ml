@@ -232,7 +232,7 @@ class NeuralNetwork():
                 self.logger.log(log_msg)
 
             loss_msg = f'Loss: {loss / (i + 1):.10f}'
-            if loss < 0.001:
+            if loss < 0.0001:
                 print(
                     f'LEARN ENDED  ' \
                     f'Epochs:{epoch + 1:5d} |  ' \
