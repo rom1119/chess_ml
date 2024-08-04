@@ -20,6 +20,19 @@ from utils.calcDeffence import DeffenceAlgorithm
 from utils.calcAttack import AttackAlgorithm
 import random
 
+with open('.env', "r+") as textfile:
+    Lines = textfile.readlines()
+
+    count = 0
+    # Strips the newline character
+    for line in Lines:
+        arr_line = line.strip().split('=')
+        if arr_line[0] == 'csv_dir':
+            file_path = arr_line[1]
+#         print("Line{}: {}".format(count, line.strip()))
+
+file_path = file_path + 'test.txt'
+
 class ChessGame():
 
     last_moves_black = []
@@ -351,7 +364,6 @@ class ChessGame():
         return False
 
 
-file_path = '/Users/romanpytka/ai/csv/chess/test.txt'
 
 # game.auto_play_chess()
 
