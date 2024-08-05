@@ -54,11 +54,12 @@ class Net(nn.Module):
     def __init__(self, input_params, output_params):
         super().__init__()
         global_params = 31
+        self.layers = 30
         self.flatten = nn.Flatten()
         self.layer_stack = nn.Sequential()
         self.layer_stack.append(nn.Linear(input_params, global_params))
         self.layer_stack.append(nn.Tanh())
-        for i in range(1, 30):
+        for i in range(1, self.layers):
             self.layer_stack.append(nn.Linear(global_params, global_params))
             self.layer_stack.append(nn.Tanh())
 
@@ -134,7 +135,7 @@ class NeuralNetwork():
         # print(f"y: ")
         print(X[0])
         print(Y[0])
-        print(Y[20])
+        # print(Y[20])
         # print(YList)
         batch_size = 1
         size_x = 64
@@ -158,8 +159,9 @@ class NeuralNetwork():
         # optimizer = torch.optim.SGD(self.model.parameters(), lr=0.001)
         dtype = torch.float   
         
-        print(self.model)
+        # print(self.model)
         print('PARAMETERS OF MODEL', get_n_params(self.model))
+        print('LAYERS NR OF MODEL', self.model.layers)
         print('predictedX', predictedX.shape)
         print('predictedY', predictedY.shape)
         # print('start_time', start_time)
@@ -184,10 +186,6 @@ class NeuralNetwork():
 
                 # Every data instance is an input + label pair
                 inputs, labels = data
-                # print('labels', labels)
-                # print('labels', labels[0])
-                # print('inputs', inputs)
-                # print('inputs', inputs[0])
 
                 # print(f"bef train ")
 
@@ -216,7 +214,6 @@ class NeuralNetwork():
                 # print(f"after zero_grad ")
                 # display statistics
             # scheduler.step()
-
             
             loss_val = loss / (i + 1)
             loss_val = loss_val.detach().numpy()

@@ -60,23 +60,25 @@ class ChessGame():
 
     def tryShowUI(self):
 
-        if self.show_ui:
-            self.ax.clear()
-            svg_text = chess.svg.board(
-                self.board,
-                # fill=dict.fromkeys(board.attacks(chess.E4), "#cc0000cc"),
-                # arrows=[chess.svg.Arrow(chess.E4, chess.F6, color="#0000cccc")],
-                # squares=chess.SquareSet(chess.BB_DARK_SQUARES & chess.BB_FILE_B),
-                size=350,
-            ) 
+        if not self.show_ui:
+            return
+        
+        self.ax.clear()
+        svg_text = chess.svg.board(
+            self.board,
+            # fill=dict.fromkeys(board.attacks(chess.E4), "#cc0000cc"),
+            # arrows=[chess.svg.Arrow(chess.E4, chess.F6, color="#0000cccc")],
+            # squares=chess.SquareSet(chess.BB_DARK_SQUARES & chess.BB_FILE_B),
+            size=350,
+        ) 
 
-            # with open('example-board.svg', 'w') as f:
-            #     f.write(svg_text)
+        # with open('example-board.svg', 'w') as f:
+        #     f.write(svg_text)
 
-            svg2png(bytestring=svg_text, write_to='board.png')
-            img = mpimg.imread('board.png')
-            imgplot = self.ax.imshow(img)
-            plt.pause(0.03)
+        svg2png(bytestring=svg_text, write_to='board.png')
+        img = mpimg.imread('board.png')
+        imgplot = self.ax.imshow(img)
+        plt.pause(0.03)
 
 
     def play_ai(self, fen_moves, neuralNetwork : NeuralNetwork):
@@ -105,6 +107,8 @@ class ChessGame():
                 # most_quality_legal_move, legal_move_split, DEF_FIGURE = self.generate_and_choose_move(possible_moves, [], self.last_moves_black, values_for_target_field, move_value)
                 
                 generated_ai_possible_move = revertMove(move_ai)
+                print(f'!!!!move_ai {move_ai}', end='\n\n')
+                print(f'!!!!values_for_target_field {values_for_target_field}', end='\n\n')
                 self.current_board_for_y = current_board_for_y
 
                 field_val_map, figure_def_val, figure_idx = (generated_ai_possible_move[0], generated_ai_possible_move[1], generated_ai_possible_move[2])
@@ -113,17 +117,17 @@ class ChessGame():
                 # figure_idx = int(abs(round(figure_idx, 0)))
                 if figure_def_val == 0.2:
                     figure_def_val = 0.25
-                print(f'!!!!game_move_nr {self.game_move_nr}', end='\n\n')
                 print(f'!!!!white_move_nr {len(self.selected_moves)}',end='\n\n')
                 # print(f'!!!!possible_move {possible_move}',end='\n\n')
                 print(f'!!!!figure_def_val {figure_def_val} figure_idx {figure_idx}',end='\n\n')
                 # print(f'!!!!field_val_map {field_val_map.tolist()}',end='\n\n')
                 # print(f'!!!!values_for_target_field {values_for_target_field}',end='\n\n')
-
+                # return 
                 field_val = 9999
                 # while True:
                 field_val_map[field_val_map < 0] = 0
                 tmp_map = field_val_map.reshape(64)
+                print(f'!!!!tmp_map {tmp_map}',end='\n\n')
 
                 ind = np.argpartition(tmp_map, -15)[-15:]
                 top5 = sorted(np.unique(tmp_map[ind]), reverse=True)
@@ -354,7 +358,7 @@ class ChessGame():
    
 
             self.tryShowUI()
-            break
+            # break
             # sleep(1)
         # print_m('i=' + str(_))
 
@@ -388,8 +392,8 @@ with open(file_path, newline='\n') as csvfile:
     for game in games:
         # print('game', game)
         # print('game 22', game[len(game) - 1])
-        if game[len(game) - 1] != '#':
-            continue
+        # if game[len(game) - 1] != '#':
+        #     continue
         # print('game 33333333', game[len(game) - 1])
         moves = []
         # game_moves = []
@@ -399,88 +403,69 @@ with open(file_path, newline='\n') as csvfile:
 # maasive pixel creation 
         checkmate_games.append(moves)
     # curr_game = games[9].split(' ')[:2]
-    curr_game = checkmate_games[1]
+    # curr_game = checkmate_games[1]
 
-    print(curr_game)
+    print('LEN checkmate_games', len(checkmate_games))
 
 
 
-    # X = np.array(game.history_boards) / 10
-    # Y = np.array(game.selected_moves) / 10
     # np.save('./data/X.txt', X)
     # np.save('./data/Y.txt', Y)
 
-    X = np.load('./data/X.txt.npy')
-    Y = np.load('./data/Y.txt.npy')
-
-
-    # size_x = 10
-    # size_y = 10
-
-    # xx = [np.linspace(1, size_x, size_x)]
-    # yy = [np.linspace(1, size_y, size_y)]
-
-    # for x in X:
-    #     xx = np.append(xx, [x[:size_x]], axis=0)
-        
-    # for y in Y:
-    #     yy = np.append(yy, [y[:size_y]], axis=0)
-    #     # print('loop', x[:50])
-
-    # xx = np.delete(xx, 0, 0)
-    # yy = np.delete(yy, 0, 0)
-
-    # print('X', xx)
+    # X = np.load('./data/X.txt.npy')
+    # Y = np.load('./data/Y.txt.npy')
 
 
 
-    # with open("./data/X.txt", "w") as txt_file:
-    #     for line in X:
-    #         txt_file.write(" ".join(line) + "\n")
 
-    # with open("./data/Y.txt", "w") as txt_file:
-    #     for line in Y:
-    #         txt_file.write(" ".join(line) + "\n")
-    # sleep(3)
-
-    # print('Y', Y[1])
-    # print('Y', Y[2])
-    with_ui = True
+    with_ui = False
 
     game = ChessGame(with_ui)
 
 
+
     try :
 
-        if sys.argv[2] == 'false':
-            with_ui = False
+        if sys.argv[2] == 'true':
+            with_ui = True
     except:
         pass
 
 
-    # game.play_auto(curr_game)
-
     nn = NeuralNetwork()
 
     if sys.argv[1] == 'play_ai':
+        curr_game = checkmate_games[1]
 
         game.play_ai(curr_game, nn)
 
-    X_norm = (X - np.min(X)) / (np.max(X) - np.min(X))
-    Y_norm = (Y - np.min(Y)) / (np.max(Y) - np.min(Y))
-
-    print('X len', len(X), X.shape)
-    print('Y len', len(Y), Y.shape)
-
-    print(curr_game)
+    # print(curr_game)
     print('len', len(checkmate_games))
         # nn.train(xx, yy)
 
     # TRAIN
     if sys.argv[1] == 'train':
-        X = X_norm
-        Y = Y_norm
-        nn.train(X, Y)
+
+        for curr_game in checkmate_games:
+            try :
+
+                game = ChessGame(with_ui)
+                game.play_auto(curr_game)
+                print(curr_game)
+                X = np.array(game.history_boards)
+                Y = np.array(game.selected_moves)
+
+                X_norm = (X - np.min(X)) / (np.max(X) - np.min(X))
+                Y_norm = (Y - np.min(Y)) / (np.max(Y) - np.min(Y))
+                print('X len', len(X), X.shape)
+                print('Y len', len(Y), Y.shape)
+                X = X_norm
+                Y = Y_norm
+                nn.train(X, Y)
+            except :
+                print('ERROR GAME', curr_game)
+
+
 
 
     # PREDS
@@ -520,3 +505,21 @@ with open(file_path, newline='\n') as csvfile:
         
 
 
+
+# size_x = 10
+# size_y = 10
+
+# xx = [np.linspace(1, size_x, size_x)]
+# yy = [np.linspace(1, size_y, size_y)]
+
+# for x in X:
+#     xx = np.append(xx, [x[:size_x]], axis=0)
+    
+# for y in Y:
+#     yy = np.append(yy, [y[:size_y]], axis=0)
+#     # print('loop', x[:50])
+
+# xx = np.delete(xx, 0, 0)
+# yy = np.delete(yy, 0, 0)
+
+# print('X', xx)
