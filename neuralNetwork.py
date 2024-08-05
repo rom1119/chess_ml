@@ -58,7 +58,7 @@ class Net(nn.Module):
         self.layer_stack = nn.Sequential()
         self.layer_stack.append(nn.Linear(input_params, global_params))
         self.layer_stack.append(nn.Tanh())
-        for i in range(1, 40):
+        for i in range(1, 30):
             self.layer_stack.append(nn.Linear(global_params, global_params))
             self.layer_stack.append(nn.Tanh())
 
