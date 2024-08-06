@@ -113,8 +113,8 @@ class NeuralNetwork():
         return pred
     
 
-    def train(self, X, Y):
-        self.logger.log('========================== START TRAIN ========================== X_LEN='+str(len(X)))
+    def train(self, X, Y, idx):
+        self.logger.log('========================== START TRAIN ========================== X_LEN='+str(len(X)) + ' idx='+idx)
         XListLen = len(X)
         XList = X
         YList = Y
@@ -230,7 +230,7 @@ class NeuralNetwork():
                 self.logger.log(log_msg)
 
             loss_msg = f'Loss: {loss / (i + 1):.10f}'
-            if loss_val < 0.00001:
+            if loss_val < 0.00001 or (epoch > 70000 and loss_val < 0.00005):
                 print(
                     f'LEARN ENDED  ' \
                     f'Epochs:{epoch + 1:5d} |  ' \

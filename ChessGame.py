@@ -445,7 +445,7 @@ with open(file_path, newline='\n') as csvfile:
 
     # TRAIN
     if sys.argv[1] == 'train':
-
+        idx = 0
         for curr_game in checkmate_games:
             try :
 
@@ -461,9 +461,10 @@ with open(file_path, newline='\n') as csvfile:
                 print('Y len', len(Y), Y.shape)
                 X = X_norm
                 Y = Y_norm
-                nn.train(X, Y)
+                nn.train(X, Y, idx)
             except :
                 print('ERROR GAME', curr_game)
+            idx = idx + 1
 
 
 
