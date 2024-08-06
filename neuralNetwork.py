@@ -114,7 +114,7 @@ class NeuralNetwork():
     
 
     def train(self, X, Y, idx):
-        self.logger.log('========================== START TRAIN ========================== X_LEN='+str(len(X)) + ' idx='+idx)
+        self.logger.log('========================== START TRAIN ========================== X_LEN='+str(len(X)) + ' idx='+str(idx))
         XListLen = len(X)
         XList = X
         YList = Y
